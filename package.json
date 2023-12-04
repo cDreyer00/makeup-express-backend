@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://gitlab.com/relcei/make-up-ai/issues"
   },
-  "homepage": "https://gitlab.com/relcei/make-up-ai#readme"
+  "homepage": "https://gitlab.com/relcei/make-up-ai#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "multer": "^1.4.5-lts.1"
+  }
 }
