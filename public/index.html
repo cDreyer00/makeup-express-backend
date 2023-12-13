@@ -4,29 +4,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="style.css">
     <title>index</title>
 </head>
 
 <body>
     <h1>Make Up Express</h1>
-
-    <form action="/upload" method="post" enctype="multipart/form-data">
+    
+    <form action="/upload" method="post" enctype="multipart/form-data" id="form">
         <label for="img">Select image:</label>
         <input type="file" id="img" name="img" accept="image/*">
+        <textarea id="prompt" name="prompt" placeholder="Prompt"></textarea>
         <input type="submit" value="Upload">
     </form>
 
     <img id="preview" src="" alt="Image preview">
 
-    <script>
-        document.getElementById('img').addEventListener('change', function (event) {
-            var reader = new FileReader();
-            reader.onload = function (e) {
-                document.getElementById('preview').src = e.target.result;
-            };
-            reader.readAsDataURL(event.target.files[0]);
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 
 </html>
