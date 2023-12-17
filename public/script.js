@@ -2,6 +2,11 @@ const instructions = document.getElementById('instructions');
 const baseInstruction = document.getElementsByClassName('instruction')[0];
 const loadBtn = document.getElementById('load');
 
+const apiKeyInput = document.getElementById('apiKey');
+const apiKey = localStorage.getItem('apiKey');
+apiKeyInput.value = apiKey;    
+
+document.getElementById('apiKey').addEventListener('change', () => localStorage.setItem('apiKey', apiKeyInput.value));
 document.getElementById('save').addEventListener('click', () => save());
 loadBtn.addEventListener('change', (e) => load(e));
 

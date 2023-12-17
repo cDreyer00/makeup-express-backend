@@ -8,9 +8,6 @@ const fs = require('fs');
 
 const sd_key = process.env.STABLE_DIFFUSION_KEY;
 
-const openai_key = process.env.OPENAI_KEY;
-const openai = new OpenAi({ apiKey: openai_key });
-
 const upload = multer({ storage: multer.memoryStorage() });
 
 const app = express();
@@ -22,74 +19,50 @@ const models = {
   dallE: "dall-e-3",
 }
 
-async function GenerateAnalysis(img) {
-  const completion = await openai.chat.completions.create({
-    model: models.gpt4Vision,
-    messages: [
+function VisionGptMessagesType({ img, imgPrompt }, previousMessages = undefined) {
+  const newMessages = []
+
+  if (previousMessages) {
+    for (let i = 0; i < previousMessages.length; i++) {
+      const msg = previousMessages[i];
+      newMessages.push({
+        role: msg.role,
+        content: [{ type: "text", text: msg.content }],
+      });
+    }
+  }
+
+  newMessages.push({
+    role: "user",
+    content: [
       {
-        role: "system",
-        content: instructions.intro
+        type: "image",
+        image: img,
       },
       {
-        role: "user",
-        content: [
-          { type: "image", image: img },
-          { type: "text", text: instructions.analysis },
-        ]
-      }
-    ],
-    max_tokens: 1000,
-  });
-
-  return completion.choices[0].message.content;
-}
-
-async function GenerateRecommendations(img, analysis) {  
-  const completion = await openai.chat.completions.create({
-    model: models.gpt4Vision,
-    messages: [
-      {
-        role: "system",
-        content: instructions.intro
+        type: "text",
+        text: imgPrompt,
       },
-      {
-        role: "user",
-        content: [
-          { type: "image", image: img },
-          { type: "text", text: analysis },
-          { type: "text", text: instructions.recommendations },
-        ]
-      }
     ],
-    max_tokens: 1000,
   });
 
-  return completion.choices[0].message.content;
+  return newMessages;
 }
 
-async function GeneratePromptForImage(referenceDescription) {
+async function GenerateResponse(openai, { messages, img = undefined, max_tokens = 400 }) {
+  let model = img ? models.gpt4Vision : models.gpt4;
+  messages = img ? VisionGptMessagesType({ img, imgPrompt: messages[0].content }) : messages;
+  console.log("messages: ", messages);
   const completion = await openai.chat.completions.create({
-    model: models.gpt4,
-    messages: [
-      {
-        role: "system",
-        content: instructions.dalleImgInputGeneration
-      },
-      {
-        role: "user",
-        content: [
-          { type: "text", text: referenceDescription },
-          { type: "text", text: "eu gostaria de um prompt para gerar uma imagem de uma pessoa com as caracteristicas e produtos mencionados" }
-        ]
-      }
-    ],
-    max_tokens: 400,
+    model,
+    messages,
+    max_tokens,
   });
 
-  return completion.choices[0].message.content;
+  return completion.choices[0].message;
 }
 
-async function GenerateImages(prompt) {
+async function GenerateImage(openai, prompt) {
   const response = await openai.images.generate({
     model: models.dallE,
     prompt: prompt,
@@ -105,30 +78,31 @@ app.get('/', (req, res) => {
 });
 
 app.post('/upload', upload.single('img'), async (req, res) => {
-  console.log("Running");
-  const formPrompts = req.body;
-  console.log(formPrompts)
-  return res.json();
-
-  const img = req.file.buffer.toString('base64');
   try {
-    const analyses = await GenerateAnalysis(img);
-    console.log("analyses: ", analyses);
-    console.log("====================================");
-    
-    const recommendations = await GenerateRecommendations(img, analyses);
-    console.log("recommendations: ", recommendations);
-    console.log("====================================");
+    const prompts = req.body.prompt;
+    const apiKey = req.body.apiKey;
+    const img = req.file.buffer.toString('base64');
 
-    const imgPrompt = await GeneratePromptForImage(analyses);
-    console.log("imgPrompt: ", imgPrompt);
-    console.log("====================================");
-    
-    const img_url = await GenerateImages(imgPrompt);
-    console.log("img_url: ", img_url);
+    const openai = new OpenAi({ apiKey });
+
+    const messagesThread = [];
+    for (let i = 0; i < prompts.length; i++) {
+      
+      messagesThread.push({
+        role: "user",
+        content: prompts[i],
+      });
+      
+      if (i === 0) {
+        var gptRes = await GenerateResponse(openai, { messages: messagesThread, img });
+      } else {
+        gptRes = await GenerateResponse(openai, { messages: messagesThread });
+      }
+      messagesThread.push(gptRes);
+    }
+    let generatedImg = await GenerateImage(openai, gptRes.content);
     console.log("✅");
-    
-    return res.json({ instructions, analyses, imgPrompt, img_url });
+    return res.json({ responses: messagesThread, generatedImg });
   }
   catch (err) {
     console.log("❌");
