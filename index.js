@@ -33,6 +33,10 @@ const instructions = {
   // dalleImgInputGeneration: "Com base na análise realizada e nas recomendações, crie um prompt personalizado que servirá para geração de imagem de uma pessoa com as mesmas características do usuário com os produtos recomendados."
 }
 
+
+
+
+
 async function GenerateAnalysis(img) {
   const completion = await openai.chat.completions.create({
     model: models.gpt4Vision,
@@ -117,6 +121,9 @@ app.get('/', (req, res) => {
 
 app.post('/upload', upload.single('img'), async (req, res) => {
   console.log("Running");
+  const formPrompts = req.body;
+  console.log(formPrompts)
+  return res.json();
 
   const img = req.file.buffer.toString('base64');
   try {

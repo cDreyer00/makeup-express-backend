@@ -10,15 +10,34 @@
 
 <body>
     <h1>Make Up Express</h1>
-    
-    <form action="/upload" method="post" enctype="multipart/form-data" id="form">
-        <label for="img">Select image:</label>
-        <input type="file" id="img" name="img" accept="image/*">
-        <textarea id="prompt" name="prompt" placeholder="Prompt"></textarea>
-        <img id="preview" src="" alt="Image preview">
-        <input type="submit" value="Upload">
-    </form>
 
+    <form action="/upload" method="post" enctype="multipart/form-data" id="form">
+
+        <div id="buttons">
+            <input type="button" id="save" value="Save" />
+            <div>
+                <label for="load" class="loadLabel">Load</label>
+                <input type="file" accept="text/plain" id="load" value="Load" style="display: none;"/>
+            </div>
+        </div>
+
+        <div id="instructions">
+            <div class="instruction">
+                <textarea class="prompt" name="prompt" spellcheck="false"></textarea>
+                <input class="clone" type="button" value="Clone" />
+                <input class="remove" type="button" value="Remove" />
+                <!-- <input class="prevRes" type="checkbox" value="include previous response"/> -->
+            </div>
+        </div>
+
+        <div id="userInputs">
+            <label for="img">Select image:</label>
+            <input type="file" id="img" name="img" accept="image/*">
+            <!-- <textarea id="prompt" name="prompt" placeholder="Prompt"></textarea> -->
+            <img id="preview" src="" alt="Image preview">
+            <input type="submit" value="Run">
+        </div>
+    </form>
 
     <script src="script.js"></script>
 </body>
