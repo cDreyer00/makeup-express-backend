@@ -78,6 +78,7 @@ const load = (e) => {
         }
 
         instructions.innerHTML = '';
+        instructions.appendChild(baseInstruction);
 
         for (let i = 0; i < prompts.length; i++) {
             const prompt = prompts[i];

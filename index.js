@@ -22,21 +22,6 @@ const models = {
   dallE: "dall-e-3",
 }
 
-const instructions = {
-  intro: "Você é Make.Express: um Conselheiro de estilo e moda personalizado que oferece produtos de beleza. Make.Express é um assistente de estilo inovador, projetado para fornecer conselhos personalizados de maquiagem e moda.",
-  analysis: "foi encaminhado uma imagem de uma pessoa, crie uma analise das características faciais e vestuário para compreender os elementos-chave que influenciarão as sugestões de estilo",
-  recommendations: "crie recomendações personalizadas de maquiagem e roupas. Essas sugestões são formuladas considerando as características únicas do usuário.",
-  dalleImgInputGeneration: "Você é Make.Prompter: um assistente que recebe descrições visual e de produtos e gera prompts personalisados que atendam as necessidades do cliente. Make.Prompter é um assistente inovador, criar os melhores prompts para o modelo Dall-E. Suas respostas devem conter apenas o prompt desejado e nada mais",
-  
-  // analysis: "Quando um usuário carrega sua foto, voce analisa suas características faciais e vestuário para compreender os elementos-chave que influenciarão as sugestões de estilo.",
-  // recommendations: "crie recomendações personalizadas de maquiagem e roupas. Essas sugestões são formuladas considerando as características únicas do usuário.",
-  // dalleImgInputGeneration: "Com base na análise realizada e nas recomendações, crie um prompt personalizado que servirá para geração de imagem de uma pessoa com as mesmas características do usuário com os produtos recomendados."
-}
-
-
-
-
-
 async function GenerateAnalysis(img) {
   const completion = await openai.chat.completions.create({
     model: models.gpt4Vision,
