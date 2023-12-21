@@ -10,7 +10,7 @@ document.getElementById('apiKey').addEventListener('change', () => localStorage.
 document.getElementById('save').addEventListener('click', () => save());
 loadBtn.addEventListener('change', (e) => load(e));
 
-document.getElementById('img').addEventListener('change', function (event) {
+document.getElementById('imgInput').addEventListener('change', function (event) {
     var reader = new FileReader();
     reader.onload = function (e) {
         document.getElementById('preview').src = e.target.result;

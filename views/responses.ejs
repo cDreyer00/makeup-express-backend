@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responses</title>
+
+    <style>
+        body {
+            background-color: #f5f5f5;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        p {
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
+            border-top: 1px solid #ddd;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .user {
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
+            border-top: 1px solid #ddd;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .response {
+            background-color: #f5f5f5;
+            border-bottom: 1px solid #ddd;
+            border-top: 1px solid #ddd;
+            margin: 0;
+            padding: 20px;
+        }
+
+        #imgPreview {
+            max-width: 300px;
+            max-height: 300px;
+        }
+    </style>
+</head>
+
+<body>
+    <% for(let i=0; i < messages.length; i +=2) { %>        
+        <p class="user">
+            <%= i %> - <%= messages[i].content[0].text %>
+        </p>
+        <p class="response">
+            <%= messages[i+1].content %>
+        </p>
+        <% } %>
+    <img id="imgPreview" src="<%= generatedImg %>" "Image preview">
+    <script>
+        // const imgPreview = document.getElementById('imgPreview');
+        
+        // // var imgData = <%= generatedImg %>
+        // console.log(imgData);
+        // if (imgData) {
+        //     imgPreview.src = imgData;
+        // }
+    </script>
+        
+</body>
+
+</html>

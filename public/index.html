@@ -17,21 +17,23 @@
             <input type="button" id="save" value="Save" />
             <div>
                 <label for="load" class="loadLabel">Load</label>
-                <input type="file" accept="text/plain" id="load" value="Load" style="display: none;"/>
+                <input type="file" accept="text/plain" id="load" value="Load" style="display: none;" />
             </div>
         </div>
 
         <div id="instructions">
             <div class="instruction">
                 <textarea class="prompt" name="prompt" spellcheck="false"></textarea>
-                <input class="clone" type="button" value="Clone" />
-                <input class="remove" type="button" value="Remove" />
+                <div class="insBtns">
+                    <input class="clone" type="button" value="Clone" />
+                    <input class="remove" type="button" value="Remove" />
+                </div>
             </div>
         </div>
 
         <div id="userInputs">
             <label for="img">Select image:</label>
-            <input type="file" id="img" name="img" accept="image/*">
+            <input type="file" id="imgInput" name="img" accept="image/*">
             <img id="preview" src="" alt="Image preview">
             <input type="submit" value="Run">
         </div>

@@ -3,111 +3,57 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const multer = require('multer');
-const OpenAi = require('openai');
 const fs = require('fs');
+const Assistants = require('./Assistants');
 
-const sd_key = process.env.STABLE_DIFFUSION_KEY;
+let requests = 0;
 
 const upload = multer({ storage: multer.memoryStorage() });
 
 const app = express();
 app.use(express.static(path.join(__dirname, 'public')));
+app.set('view engine', 'ejs');
 
-const models = {
-  gpt4: "gpt-4",
-  gpt4Vision: "gpt-4-vision-preview",
-  dallE: "dall-e-3",
-}
 
-function VisionGptMessagesType({ img, imgPrompt }, previousMessages = undefined) {
-  const newMessages = []
 
-  if (previousMessages) {
-    for (let i = 0; i < previousMessages.length; i++) {
-      const msg = previousMessages[i];
-      newMessages.push({
-        role: msg.role,
-        content: [{ type: "text", text: msg.content }],
-      });
-    }
-  }
-
-  newMessages.push({
-    role: "user",
-    content: [
-      {
-        type: "image",
-        image: img,
-      },
-      {
-        type: "text",
-        text: imgPrompt,
-      },
-    ],
-  });
-
-  return newMessages;
-}
-
-async function GenerateResponse(openai, { messages, img = undefined, max_tokens = 400 }) {
-  let model = img ? models.gpt4Vision : models.gpt4;
-  messages = img ? VisionGptMessagesType({ img, imgPrompt: messages[0].content }) : messages;
-  console.log("messages: ", messages);
-  const completion = await openai.chat.completions.create({
-    model,
-    messages,
-    max_tokens,
-  });
-
-  return completion.choices[0].message;
-}
-
-async function GenerateImage(openai, prompt) {
-  const response = await openai.images.generate({
-    model: models.dallE,
-    prompt: prompt,
-    n: 1,
-    size: "1024x1024",
-  });
-  image_url = response.data[0].url;
-  return image_url;
-}
+// var imgGenInstruction = "based on all this conversation, create a prompt for dall image generation containing informations about the person and looks";
+var imgGenInstruction = "based on the person in the image, create a prompt for Dalle image generation containing informations about the person and its looks";
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+app.get('/test', (req, res) => {
+
+});
+
 app.post('/upload', upload.single('img'), async (req, res) => {
+  let rId = requests++;
   try {
-    const prompts = req.body.prompt;
+    console.log("🚀 request " + rId);
+
+    const prompts = Array.isArray(req.body.prompt) ? req.body.prompt : [req.body.prompt];
     const apiKey = req.body.apiKey;
     const img = req.file.buffer.toString('base64');
 
-    const openai = new OpenAi({ apiKey });
+    const assistant = new Assistants(apiKey);
+    for (let i = 0; i < prompts.length; i++)
+      if (i == 0)
+        await assistant.chat(prompts[i], img);
+      else
+        await assistant.chat(prompts[i]);
 
-    const messagesThread = [];
-    for (let i = 0; i < prompts.length; i++) {
-      
-      messagesThread.push({
-        role: "user",
-        content: prompts[i],
-      });
-      
-      if (i === 0) {
-        var gptRes = await GenerateResponse(openai, { messages: messagesThread, img });
-      } else {
-        gptRes = await GenerateResponse(openai, { messages: messagesThread });
-      }
-      messagesThread.push(gptRes);
-    }
-    let generatedImg = await GenerateImage(openai, gptRes.content);
+    let chatRes = await assistant.chat(imgGenInstruction);
+    let generatedImg = await assistant.generateImage(chatRes.response.content);
+    console.log({ requestId: rId, messages: assistant.messages, generatedImg });
     console.log("✅");
-    return res.json({ responses: messagesThread, generatedImg });
+
+    return res.render('responses', { messages: assistant.messages, generatedImg });
   }
   catch (err) {
     console.log("❌");
-    console.log(err);
-    res.status(500).send('Something went wrong');
+    console.error({ requestId: rId, error: err });
+    res.status(500).json({ requestId: rId, error: err });
   }
 });
 
