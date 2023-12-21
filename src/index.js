@@ -6,6 +6,8 @@ const multer = require('multer');
 const fs = require('fs');
 const Assistants = require('./Assistants');
 
+var imgGenInstruction = "based on the person in the image, create a prompt for Dalle image generation containing informations about the person and its looks";
+
 let requests = 0;
 
 const upload = multer({ storage: multer.memoryStorage() });
@@ -14,9 +16,6 @@ const app = express();
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'public'));
-
-// var imgGenInstruction = "based on all this conversation, create a prompt for dall image generation containing informations about the person and looks";
-var imgGenInstruction = "based on the person in the image, create a prompt for Dalle image generation containing informations about the person and its looks";
 
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
 app.post('/upload', upload.single('img'), upload);
@@ -34,19 +33,21 @@ async function upload(req, res) {
     const apiKey = req.body.apiKey;
     const img = req.file.buffer.toString('base64');
 
-    const assistant = new Assistants(apiKey);
+    const chatAssistant = Assistants.BaseAssistant(apiKey);
     for (let i = 0; i < prompts.length; i++)
       if (i == 0)
-        await assistant.chat(prompts[i], img);
+        await chatAssistant.chat(prompts[i], img);
       else
-        await assistant.chat(prompts[i]);
-
-    let chatRes = await assistant.chat(imgGenInstruction);
-    let generatedImg = await assistant.generateImage(chatRes.response.content);
-    console.log({ requestId: rId, messages: assistant.messages, generatedImg });
+        await chatAssistant.chat(prompts[i]);
+    
+    const imgPrompterAssistant = Assistants.ImgGenPrompter(apiKey);
+    imgPrompterAssistant.messages = chatAssistant.messages;
+    let chatRes = imgPrompterAssistant.chat(imgGenInstruction, img);
+    let generatedImg = await chatAssistant.generateImage(chatRes.response.content);
+    console.log({ requestId: rId, messages: chatAssistant.messages, generatedImg });
     console.log("✅");
 
-    return res.render('responses', { messages: assistant.messages, generatedImg });
+    return res.render('responses', { messages: chatAssistant.messages, generatedImg });
   }
   catch (err) {
     console.log("❌");
