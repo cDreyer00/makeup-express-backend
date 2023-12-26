@@ -1,4 +1,5 @@
 const OpenAI = require('openai');
+const imgGenerator = require('./AIImgGen');
 
 class Assistant {
     constructor(apiKey) {
@@ -72,15 +73,16 @@ class Assistant {
         }
     }
 
-    async generateImage(prompt) {
-        const response = await this.openai.images.generate({
-            model: this.models.dallE,
-            prompt: prompt,
-            n: 1,
-            size: "1024x1024",
-        });
-        let image_url = response.data[0].url;
-        return image_url;
+    async generateImage(prompt, img = undefined) {
+        // const response = await this.openai.images.generate({
+        //     model: this.models.dallE,
+        //     prompt: prompt,
+        //     n: 1,
+        //     size: "1024x1024",
+        // });
+        // let image_url = response.data[0].url;
+        // return image_url;
+        return await imgGenerator.generate(prompt, img);
     }
 }
 
