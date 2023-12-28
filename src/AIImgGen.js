@@ -4,7 +4,7 @@ const axios = require("axios");
 
 const falApiKey = process.env.FALAI_KEY;
 
-async function generate(prompt, imgUrl) {
+async function generate({ prompt, imgUrl }) {
     try {
         const res = await axios({
             method: 'post',
@@ -16,6 +16,8 @@ async function generate(prompt, imgUrl) {
             data: {
                 prompt,
                 face_image_url: imgUrl,
+                seed: 1,
+                num_inference_steps: 100,
                 negative_prompt: "blurry, low resolution, bad, ugly, low quality, pixelated, interpolated, compression artifacts, noisey, grainy, multiple people, multiple faces"
             }
         })

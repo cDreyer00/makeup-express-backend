@@ -4,7 +4,7 @@ const imgGenerator = require('./AIImgGen');
 class Assistant {
     constructor(apiKey) {
         this.openai = new OpenAI({ apiKey: apiKey });
-        this.instructionPrompt = undefined;
+        this.instruction = undefined;
         this.messages = [];
 
         this.models = {
@@ -14,21 +14,8 @@ class Assistant {
         }
     }
 
-    setInstruction(instruction) {
-        this.instructionPrompt = instruction;
-        let firstMessage = this.messages[0];
-        if (firstMessage && firstMessage.role === "system") {
-            this.messages[0] = {
-                role: "system",
-                content: instruction,
-            };
-        }
-        else {
-            this.messages.unshift({
-                role: "system",
-                content: instruction,
-            });
-        }
+    set instructionPrompt(instruction) {
+        this.instruction = instruction;
     }
 
     IsImgUrl(img) {
@@ -36,16 +23,16 @@ class Assistant {
         return (img.match(/\.(jpeg|jpg|gif|png)$/) != null);
     }
 
-    async chat(message, img = undefined) {
+    async chat({ message = undefined, img = undefined }) {
 
         if (this.makingRequest) return false;
         this.makingRequest = true;
 
         try {
-            let msg = {
-                role: 'user',
-                content: [{ type: "text", text: message }]
-            }
+            let msg = { role: "user", content: [] };
+
+            if (message)
+                msg.content.push({ type: "text", text: message });
 
             if (img) {
                 if (this.IsImgUrl(img))
@@ -56,9 +43,14 @@ class Assistant {
 
             this.messages.push(msg);
 
+            let msgs = this.messages.slice();
+
+            if (this.instruction)
+                msgs.unshift({ role: 'system', content: this.instruction });
+
             const completionRes = await this.openai.chat.completions.create({
                 model: this.models.gpt4Vision,
-                messages: this.messages,
+                messages: msgs,
                 max_tokens: 400,
             });
 
@@ -66,23 +58,15 @@ class Assistant {
             this.messages.push(response);
 
             this.makingRequest = false;
-            return { response, messages: this.messages };
+            return response;
         } catch (err) {
             this.makingRequest = false;
-            console.log(err);
+            throw err;
         }
     }
 
-    async generateImage(prompt, img = undefined) {
-        // const response = await this.openai.images.generate({
-        //     model: this.models.dallE,
-        //     prompt: prompt,
-        //     n: 1,
-        //     size: "1024x1024",
-        // });
-        // let image_url = response.data[0].url;
-        // return image_url;
-        return await imgGenerator.generate(prompt, img);
+    async generateImage({ prompt, imgUrl }) {
+        return await imgGenerator.generate({ prompt, imgUrl });
     }
 }
 
