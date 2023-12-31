@@ -3,8 +3,6 @@ const axios = require('axios');
 
 const key = process.env.IMGBB_KEY;
 
-//curl --location --request POST "https://api.imgbb.com/1/upload?expiration=600&key=YOUR_CLIENT_API_KEY" --form "image=R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-
 async function submit({img, expiration = 3600}) {
     try {
         let formData = new FormData();
@@ -22,7 +20,7 @@ async function submit({img, expiration = 3600}) {
         return response.data.data.url;
     }
     catch (err) {
-        throw err;
+        throw err.response.data.error;
     }
 }
 

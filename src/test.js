@@ -3,34 +3,38 @@ require('dotenv').config();
 const Assistant = require('./Assistant');
 const assistant = new Assistant(process.env.OPENAI_KEY);
 const fs = require('fs');
+const path = require('path');
 
-const instruction = `You create text prompts for generating AI images following the user requestes. You are able to recieve another image as input to be use as guidance for the text prompt. here are some prompt examples that you need to create:
-"Portrait of a child playing in a park, using natural lighting and candid expressions.";
-"Stylized portrait of an entrepreneur against a city skyline, with dramatic lighting and a futuristic look."
-"Generate a portrait of a mature individual with a weathered appearance, bathed in natural light to accentuate the textures of aging. The subject should have deep-set hazel eyes, a rugged face with prominent lines and wrinkles, a slightly crooked nose, and thin, weathered lips. Incorporate the character of an experienced individual who has spent a lifetime at sea, capturing a sense of resilience and wisdom in their expression";
-"Woman with piercing blue eyes, an angular face shape with defined cheekbones, a straight nose with a subtle curve at the tip, and full lips with a natural pout. Add freckles across the bridge of the nose and cheeks for a touch of youthful charm. The expression should convey a sense of quiet confidence and introspection, with a hint of a smile playing at the corners of the mouth."
-`
-
-// experimental prompts
-"photo of a woman, striking green hair. makeup includes bold red lipstick and purple eyeliner, she uses casual sports attire, aroud 20 years"
-"vibrant red lipstick; bold purple eyeliner; striking green hair, styled in a modern fashion; and casual sports attire that suggests an active lifestyle. The person should have a similar facial structure to the one in the reference image, with expressively arched eyebrows and a subtle, confident expression. The overall image should have a contemporary feel, capturing the fusion of distinct makeup styling with athletic wear."
-// ====================
+const imgPath = path.join(__dirname, '..', 'public', 'img', 'Screenshot 2023-12-29 215548.png');
 
 const RunTest = async () => {
-    const prompt = `create a prompt to be used in some AI image generation to generate an image of a person that resembles the person in this image. Include the following characteristics:
-        - red lipstick;
-        - purple eyeliner;
-        - green hair;
-        - sports clothes;
+    let img = fs.readFileSync(imgPath);
+    img = img.toString('base64');
+
+    let prompt = `
+        encaminhei uma imagem de uma screenshot de um botão que desenvolvi em nextjs com tailwind, ele serve pra fazer submissão de arquivos, porem quando eu coloquei o tipo file ele ficou com um design indesejado apesar de o código indicar que o desing não é assim, como arrumar?
+        aqui esta o código:
+
+        <input className='
+        transition-all duration-200
+        absolute top-1/2 left-1/4 -translate-y-1/2
+        h-28 w-56 bg-secondary 
+        outline outline-black outline-1 rounded-button
+        text-black text-center
+
+        hover:h-32 hover:w-60
+        '
+        value={'Click Here'}
+        type='file'
+        accept='image/*'
+        onClick={onClick}
+      />
     `
 
-    const img = fs.readFileSync('./public/img/Screenshot 2023-12-21 104024.png', { encoding: 'base64' });
-
-    assistant.setInstruction(instruction);
-    await assistant.chat(prompt, img);
-    return assistant;
+    let request = { img, message: prompt };
+    return await assistant.chat(request);
 }
 
 RunTest()
-    .then((res) => console.log(res.messages))
+    .then((res) => console.log(res.content))
     .catch((err) => console.log(err));

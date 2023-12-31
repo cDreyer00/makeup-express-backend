@@ -6,6 +6,14 @@ const falApiKey = process.env.FALAI_KEY;
 
 async function generate({ prompt, imgUrl }) {
     try {
+        let data = {
+            prompt,
+            face_image_url: imgUrl,
+            seed: 1,
+            num_inference_steps: 50,
+            negative_prompt: "blurry, low resolution, bad, ugly, low quality, pixelated, interpolated, compression artifacts, noisey, grainy, multiple people, multiple faces, hidden eyes"
+        }
+
         const res = await axios({
             method: 'post',
             url: 'https://110602490-ip-adapter-face-id.gateway.alpha.fal.ai/',
@@ -13,19 +21,14 @@ async function generate({ prompt, imgUrl }) {
                 Authorization: `Key ${falApiKey}`,
                 'Content-Type': 'application/json'
             },
-            data: {
-                prompt,
-                face_image_url: imgUrl,
-                seed: 1,
-                num_inference_steps: 100,
-                negative_prompt: "blurry, low resolution, bad, ugly, low quality, pixelated, interpolated, compression artifacts, noisey, grainy, multiple people, multiple faces"
-            }
+            data
         })
-
+        
+        console.log(res.data);
         return res.data;
     }
     catch (err) {
-        throw err;
+        throw err.response.data.error;
     }
 }
 
