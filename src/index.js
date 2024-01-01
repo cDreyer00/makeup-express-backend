@@ -1,6 +1,5 @@
 require('dotenv').config();
 
-const express = require('express');
 const multer = require('multer');
 
 // routes import
@@ -12,8 +11,8 @@ const app = require('./app');
 const upload = multer({ storage: multer.memoryStorage() });
 
 app.get('/', (req, res) => res.send("Hello World!"));
-app.post('/api/advices', upload.single('img'), advices);
-app.post('/api/generateImage', upload.single('img'), generateImage);
+app.post('/api/advices', upload.single('image'), advices);
+app.post('/api/generateImage', upload.single('image'), generateImage);
 
 const port = process.env.PORT || 3001;
 app.listen(port, () => {

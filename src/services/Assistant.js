@@ -23,7 +23,7 @@ class Assistant {
         return (img.match(/\.(jpeg|jpg|gif|png)$/) != null);
     }
 
-    async chat({ message = undefined, img = undefined }) {
+    async chat({ message = undefined, img = undefined, max_tokens = 400 }) {
 
         if (this.makingRequest) return false;
         this.makingRequest = true;
@@ -51,7 +51,7 @@ class Assistant {
             const completionRes = await this.openai.chat.completions.create({
                 model: this.models.gpt4Vision,
                 messages: msgs,
-                max_tokens: 400,
+                max_tokens
             });
 
             const response = completionRes.choices[0].message;
