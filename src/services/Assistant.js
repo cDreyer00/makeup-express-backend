@@ -2,16 +2,16 @@ const OpenAI = require('openai');
 const imgGenerator = require('./AIImgGen');
 
 class Assistant {
-    constructor(apiKey) {
-        this.openai = new OpenAI({ apiKey: apiKey });
-        this.instruction = undefined;
-        this.messages = [];
+    constructor(apiKey, configs = undefined) {
+        let {instruction, messages, model, max_tokens, response_format} = configs;
 
-        this.models = {
-            gpt4: "gpt-4",
-            gpt4Vision: "gpt-4-vision-preview",
-            dallE: "dall-e-3",
-        }
+        this.openai = new OpenAI({ apiKey: apiKey });
+
+        this.response_format = response_format;
+        this.instruction     = instruction;
+        this.messages        = messages      || [];    
+        this.model           = model         || models.gpt4Vision;
+        this.max_tokens      = max_tokens    || 400;
     }
 
     set instructionPrompt(instruction) {
@@ -23,7 +23,7 @@ class Assistant {
         return (img.match(/\.(jpeg|jpg|gif|png)$/) != null);
     }
 
-    async chat({ message = undefined, img = undefined, max_tokens = 400 }) {
+    async chat({ message = undefined, img = undefined }) {
 
         if (this.makingRequest) return false;
         this.makingRequest = true;
@@ -49,9 +49,10 @@ class Assistant {
                 msgs.unshift({ role: 'system', content: this.instruction });
 
             const completionRes = await this.openai.chat.completions.create({
-                model: this.models.gpt4Vision,
+                model: this.model,
+                response_format: this.response_format,
+                max_tokens: this.max_tokens,
                 messages: msgs,
-                max_tokens
             });
 
             const response = completionRes.choices[0].message;
@@ -68,6 +69,12 @@ class Assistant {
     async generateImage({ prompt, imgUrl }) {
         return await imgGenerator.generate({ prompt, imgUrl });
     }
+}
+
+const models = {
+    gpt4: "gpt-4",
+    gpt4Vision: "gpt-4-vision-preview",
+    dallE: "dall-e-3",
 }
 
 module.exports = Assistant;

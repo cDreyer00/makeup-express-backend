@@ -28,7 +28,13 @@ async function generate({ prompt, imgUrl }) {
         return res.data;
     }
     catch (err) {
-        throw err.response.data.error;
+        let error;
+        if(err.response)
+            error = err.response.data;
+        else
+            error = err;
+
+        throw error;
     }
 }
 

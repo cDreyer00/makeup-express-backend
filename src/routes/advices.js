@@ -20,8 +20,12 @@ async function advices(req, res) {
 
         var imgUrl = await imgUploader.submit({ img });
 
+        console.log({ prompt, imgUrl })
+
         if (prompt == "") prompt = undefined;
-        let request = { img: imgUrl, message: prompt, max_tokens: 1500};
+        if (prompt) prompt = "preference: " + prompt;
+        else prompt = "preference: let AI decide";
+        let request = { img: imgUrl, message: prompt };
 
         let makeupRes = await getAssistantRes(request);
         let resLength = makeupRes.content.length;
@@ -32,7 +36,7 @@ async function advices(req, res) {
             if (resLength < 500) console.log(makeupRes.content, "*retrying*");
         }
 
-        let resData = { 
+        let resData = {
             advices: makeupRes.content,
             imageUrl: imgUrl
         };
