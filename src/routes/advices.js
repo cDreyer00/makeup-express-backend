@@ -6,6 +6,8 @@ const apiKey = process.env.OPENAI_KEY;
 
 let base64Regex = /^data:image\/(png|jpg|jpeg);base64,/;
 
+const MIN_PROMPT_LENGTH = 500;
+
 async function advices(req, res) {
 
     console.log("Getting advices...");
@@ -13,6 +15,7 @@ async function advices(req, res) {
     try {
         let prompt = req.body.prompt;
         let img = req.file;
+        let language = req.body.language;
 
         if (!img) return res.status(400).json({ error: "No image provided" });
 
@@ -20,20 +23,25 @@ async function advices(req, res) {
 
         var imgUrl = await imgUploader.submit({ img });
 
-        console.log({ prompt, imgUrl })
-
+        
         if (prompt == "") prompt = undefined;
         if (prompt) prompt = "preference: " + prompt;
         else prompt = "preference: let AI decide";
+        
+        console.log({ prompt, imgUrl, language })
+
+        if (!language || language == "") language = "English";
+        prompt = prompt + "\nlanguage: " + language;
+
         let request = { img: imgUrl, message: prompt };
 
         let makeupRes = await getAssistantRes(request);
         let resLength = makeupRes.content.length;
-        while (resLength < 500) {
+        while (resLength < MIN_PROMPT_LENGTH) {
             makeupRes = await getAssistantRes(request);
             resLength = makeupRes.content.length;
 
-            if (resLength < 500) console.log(makeupRes.content, "*retrying*");
+            if (resLength < MIN_PROMPT_LENGTH) console.log(makeupRes.content, "*retrying*");
         }
 
         let resData = {
@@ -41,7 +49,6 @@ async function advices(req, res) {
             imageUrl: imgUrl
         };
 
-        console.log("advices ✅");
         return res.json(resData);
     } catch (err) {
         console.log("❌");
