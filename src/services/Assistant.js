@@ -59,7 +59,7 @@ class Assistant {
             this.messages.push(response);
 
             this.makingRequest = false;
-            return response;
+            return response.content;
         } catch (err) {
             this.makingRequest = false;
             throw err;

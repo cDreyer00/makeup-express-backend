@@ -22,7 +22,6 @@ async function advices(req, res) {
         img = img.buffer.toString('base64');
 
         var imgUrl = await imgUploader.submit({ img });
-
         
         if (prompt == "") prompt = undefined;
         if (prompt) prompt = "preference: " + prompt;
@@ -36,16 +35,16 @@ async function advices(req, res) {
         let request = { img: imgUrl, message: prompt };
 
         let makeupRes = await getAssistantRes(request);
-        let resLength = makeupRes.content.length;
+        let resLength = makeupRes.length;
         while (resLength < MIN_PROMPT_LENGTH) {
             makeupRes = await getAssistantRes(request);
-            resLength = makeupRes.content.length;
+            resLength = makeupRes.length;
 
-            if (resLength < MIN_PROMPT_LENGTH) console.log(makeupRes.content, "*retrying*");
+            if (resLength < MIN_PROMPT_LENGTH) console.log(makeupRes, "*retrying*");
         }
 
         let resData = {
-            advices: makeupRes.content,
+            advices: makeupRes,
             imageUrl: imgUrl
         };
 

@@ -27,14 +27,12 @@ async function generateImage(req, res) {
             img: imgUrl
         });
 
-        console.log(imgPromptRes.content);
-
-        let generatedImg = await imgPrompterAssistant.generateImage({ prompt: imgPromptRes.content, imgUrl });
+        let generatedImg = await imgPrompterAssistant.generateImage({ prompt: imgPromptRes, imgUrl });
 
         let result = {
-            prompt: imgPromptRes.content,
-            referenceImg: imgUrl,
-            generatedImg
+            prompt: imgPromptRes,
+            referenceImgUrl: imgUrl,
+            generatedImgUrl: generatedImg.image.url
         }
 
         console.log("image generated ✅");

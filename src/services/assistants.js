@@ -58,13 +58,8 @@ function createJSONAssistant(apiKey) {
         Please note that the description can contain other kind of products like clothes and accessories, but you should only return the makeup products.
 
         Here are some response examples that you need to create:
-        products:{
-            makeup:["soft pink lipstick", "black eyeliner", "pink blush"],
-        }
-
-        products:{
-            makeup:["eyeshadow", "black eyeliner", "pink blush", "gloss"],
-        }
+        makeups:["soft pink lipstick", "black eyeliner", "pink blush"],
+        makeups:["eyeshadow", "black eyeliner", "pink blush", "gloss"],
         `
 
     let configs = {

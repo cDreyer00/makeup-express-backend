@@ -1,7 +1,9 @@
 const axios = require('axios');
 
-const apiKey = "e8d2745af676d7499d746da8d971c4c5882312a9"
 class WebSearchService {
+
+    /// @param {string} apiKey - serper api key
+    /// @param {string} siteFilter - results will be filtered to this site, should be sent as a domain name "amazon.com"
     constructor(apiKey, siteFilter = undefined, searchType = "search") {
         this.key = apiKey;
         this.filter = siteFilter;
@@ -29,25 +31,25 @@ class WebSearchService {
     #getSearchConfig(query, site, type = "search") {
         let availableTypes = ["search", "images", "videos", "news", "shopping", "places"];
         if (!availableTypes.includes(type)) throw new Error("Invalid type: " + type);
-    
+
         let q = `site:${site} ${query}`
-    
+
         let data = JSON.stringify({
             q,
             gl: "us",
             autocorrect: false,
         });
-    
+
         let config = {
             method: 'post',
             url: `https://google.serper.dev/${type}`,
             headers: {
-                'X-API-KEY': apiKey,
+                'X-API-KEY': this.key,
                 'Content-Type': 'application/json'
             },
             data: data
         };
-    
+
         return config;
     }
 
@@ -66,4 +68,4 @@ class WebSearchService {
     }
 }
 
-export default WebSearchService;
+module.exports = WebSearchService;
