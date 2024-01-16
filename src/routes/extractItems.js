@@ -5,7 +5,7 @@ const openaiKey = process.env.OPENAI_KEY;
 
 const WebSearch = require('../services/webSearchService');
 const serperKey = process.env.SERPER_KEY;
-const webSearch = new WebSearch(serperKey, "amazon.com");
+const webSearch = new WebSearch(serperKey, "www.amazon.com");
 
 async function extractItems(req, res) {
 

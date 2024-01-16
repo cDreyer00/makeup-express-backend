@@ -4,8 +4,6 @@ const assistants = require('../services/assistants');
 const imgUploader = require('../services/imageUploader');
 const apiKey = process.env.OPENAI_KEY;
 
-let base64Regex = /^data:image\/(png|jpg|jpeg);base64,/;
-
 const MIN_PROMPT_LENGTH = 500;
 
 async function advices(req, res) {
@@ -21,7 +19,7 @@ async function advices(req, res) {
 
         img = img.buffer.toString('base64');
 
-        var imgUrl = await imgUploader.submit({ img });
+        var imgUrl = await imgUploader.submit({ img, expiration: 99999 });
         
         if (prompt == "") prompt = undefined;
         if (prompt) prompt = "preference: " + prompt;
