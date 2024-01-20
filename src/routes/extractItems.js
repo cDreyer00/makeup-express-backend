@@ -11,33 +11,33 @@ async function extractItems(req, res) {
 
     console.log("Extracting items...");
     console.log(req.body);
-    
+
     try {
         let prompt = req.body.prompt;
 
         if (prompt == "" || prompt == undefined) return res.status(400).json({ error: "No prompt provided" });
 
         let makeups = await getAssistantRes(prompt);
-        if(!makeups) return res.status(500).json({ error: "Internal server error" });
-        
+        if (!makeups) return res.status(500).json({ error: "Internal server error" });
+
         let products = await findProducts(makeups);
         makeups = products;
 
         return res.json(makeups);
     } catch (err) {
         console.log("❌");
-        console.log(err);
-    
+        console.log("extract items error:", err);
+
         return res.status(500).json({ error: err });
     }
 }
 
-async function findProducts(products){
+async function findProducts(products) {
     let results = [];
-    for(let product of products){
+    for (let product of products) {
         let res = await webSearch.search(product);
         let firstResult = res[0];
-        if(!firstResult){
+        if (!firstResult) {
             console.log("No results found for: ", product);
             continue;
         }
@@ -54,7 +54,7 @@ async function findProducts(products){
 }
 
 async function getAssistantRes(message) {
-    let assistant = assistants.createJSONAssistant(openaiKey);
+    let assistant = await assistants.createJSONAssistant(openaiKey);
     let res = await assistant.chat({
         message
     });
@@ -63,11 +63,6 @@ async function getAssistantRes(message) {
     let obj = JSON.parse(res);
     let makeups = obj.makeups;
     return makeups;
-}
-
-async function Search(){
-    let results = await webSearch.search("")
-    console.log(results);
 }
 
 module.exports = extractItems;

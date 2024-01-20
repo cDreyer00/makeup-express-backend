@@ -15,13 +15,11 @@ async function generateImage(req, res) {
         let imgUrl = await imgUploader.submit({ img });
 
         let prompt = req.body.prompt;
-        if (prompt){
-            prompt = "create a prompt to generate a person that looks like the one in the picture, following these aditional requests:\n" + prompt;
-        }
-        else
-            prompt = "create a prompt to generate a person that looks like the one in the picture";
+        if (!prompt) throw new Error("No prompt provided");
 
-        const imgPrompterAssistant = assistants.createImgGenPrompter(apiKey);
+        prompt = "create a prompt to generate a person with these aditional details:\n" + prompt;
+
+        const imgPrompterAssistant = await assistants.createImgGenPrompter(apiKey);
         let imgPromptRes = await imgPrompterAssistant.chat({
             message: prompt,
             img: imgUrl
@@ -39,7 +37,7 @@ async function generateImage(req, res) {
         return res.json(result);
     } catch (err) {
         console.log("❌");
-        console.log(err);
+        console.log("Generate Image error:", err);
         return res.status(500).json({ error: err });
     }
 }

@@ -11,26 +11,31 @@ async function advices(req, res) {
     console.log("Getting advices...");
 
     try {
-        let prompt = req.body.prompt;
+        let { preference, language } = req.body;
         let img = req.file;
-        let language = req.body.language;
 
         if (!img) return res.status(400).json({ error: "No image provided" });
 
         img = img.buffer.toString('base64');
 
-        var imgUrl = await imgUploader.submit({ img, expiration: 99999 });
-        
-        if (prompt == "") prompt = undefined;
-        if (prompt) prompt = "preference: " + prompt;
-        else prompt = "preference: let AI decide";
-        
-        console.log({ prompt, imgUrl, language })
+        var imgUrl = await imgUploader.submit({ img, expiration: 999999 });
 
-        if (!language || language == "") language = "English";
-        prompt = prompt + "\nlanguage: " + language;
+        if (preference == "") preference = undefined;
+        preference = preference ? preference : "none";
 
-        let request = { img: imgUrl, message: prompt };
+
+        if (!language || language == "")
+            language = "en";
+
+        let request = {
+            img: imgUrl,
+            message: JSON.stringify({
+                preference,
+                language
+            })
+        };
+
+        console.log("request:", request)
 
         let makeupRes = await getAssistantRes(request);
         let resLength = makeupRes.length;
@@ -38,7 +43,7 @@ async function advices(req, res) {
             makeupRes = await getAssistantRes(request);
             resLength = makeupRes.length;
 
-            if (resLength < MIN_PROMPT_LENGTH) console.log(makeupRes, "*retrying*");
+            if (resLength < MIN_PROMPT_LENGTH) console.log("*retrying*");
         }
 
         let resData = {
@@ -49,14 +54,14 @@ async function advices(req, res) {
         return res.json(resData);
     } catch (err) {
         console.log("❌");
-        console.log(err);
+        console.log("Advices error:", err);
         return res.status(500).json({ error: err });
     }
 }
 
-async function getAssistantRes(request) {
-    var chatAssistant = assistants.createMakeupExpressAssistant(apiKey);
-    let makeupRes = await chatAssistant.chat(request);
+async function getAssistantRes({ message, img }) {
+    var chatAssistant = await assistants.createMakeupExpressAssistant(apiKey);
+    let makeupRes = await chatAssistant.chat(message, img);
     return makeupRes;
 }
 

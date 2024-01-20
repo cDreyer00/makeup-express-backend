@@ -1,0 +1,21 @@
+[request]
+img: "https://img.com"
+create a prompt to generate a person with these aditional details:
+For a rock party, you can go for a look that's edgy and bold to match the high-energy vibe of the event. Based on the photo you've provided, here are some personalized makeup and fashion suggestions:
+
+Makeup:
+- Eyes: A smoky eye look would be perfect for a rock party. You can use black or dark grey eyeshadow to create this effect and add some silver shimmer to the inner corners for a pop of brightness. Bold, winged eyeliner will complement the smoky eyeshadow and give your eyes a dramatic effect.
+- Brows: Keep your eyebrows well-defined and filled in to frame your face.
+- Lips: A bold red lip color can add intensity to your look and is a classic choice for rock-inspired makeup.
+- Face: You might want to add a bit more contour to define your cheekbones and a touch of highlighter on the high points of your face for a subtle glow.
+
+Fashion:
+- Top: A leather or faux leather jacket paired with a band t-shirt is a timeless choice. You can also opt for a black lace or mesh top for a mix of edgy and feminine.
+- Bottoms: Skinny jeans or black leather pants will work well. If you prefer skirts, a black mini skirt with fishnet tights can also be very rock-n-roll.
+- Footwear: Combat boots or heeled ankle boots will tie your outfit together and are practical for dancing.
+- Accessories: Studded belts, chunky bracelets, and choker necklaces are great accessories to amplify your rock party look.
+
+Remember, the key is to balance comfort with style so you can enjoy the party while feeling confident in your outfit and makeup. Enjoy your rock party!
+
+[response]
+Create an image of a confident woman with cascading waves in her hair, deep red, bold eye makeup, smoky eyes with winged eyeliner, BOLD RED lipstick. A leather jacket with a band t-shirt, accessorize her with studded bracelets, a bold choker.
