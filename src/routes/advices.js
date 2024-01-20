@@ -43,14 +43,16 @@ async function advices(req, res) {
             makeupRes = await getAssistantRes(request);
             resLength = makeupRes.length;
 
-            if (resLength < MIN_PROMPT_LENGTH) console.log("*retrying*");
+            if (resLength < MIN_PROMPT_LENGTH) {
+                console.log("*retrying*");
+            }
         }
 
         let resData = {
             advices: makeupRes,
             imageUrl: imgUrl
         };
-
+        console.log("advices response:", resData);
         return res.json(resData);
     } catch (err) {
         console.log("❌");
@@ -61,7 +63,8 @@ async function advices(req, res) {
 
 async function getAssistantRes({ message, img }) {
     var chatAssistant = await assistants.createMakeupExpressAssistant(apiKey);
-    let makeupRes = await chatAssistant.chat(message, img);
+    let makeupRes = await chatAssistant.chat({message, img});
+
     return makeupRes;
 }
 

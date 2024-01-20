@@ -25,6 +25,9 @@ async function generateImage(req, res) {
             img: imgUrl
         });
 
+        if(imgPromptRes.includes("sorry" || "Sorry"))
+            throw new Error("Prompt not accepted by AI");
+
         let generatedImg = await imgPrompterAssistant.generateImage({ prompt: imgPromptRes, imgUrl });
 
         let result = {
@@ -33,7 +36,7 @@ async function generateImage(req, res) {
             generatedImgUrl: generatedImg.image.url
         }
 
-        console.log("image generated ✅");
+        console.log("img gen response: ", result)
         return res.json(result);
     } catch (err) {
         console.log("❌");

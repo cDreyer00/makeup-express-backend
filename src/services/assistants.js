@@ -39,8 +39,6 @@ async function createImgGenPrompter(apiKey) {
 async function createMakeupExpressAssistant(apiKey) {
     let makeupInstructions = await loadInstructions("advices");
 
-    console.log(makeupInstructions);
-    
     let instruction = makeupInstructions.system;
     let messages = converMessages(makeupInstructions.messages);
     

@@ -22,7 +22,7 @@ async function extractItems(req, res) {
 
         let products = await findProducts(makeups);
         makeups = products;
-
+        console.log("products response: ", makeups)
         return res.json(makeups);
     } catch (err) {
         console.log("❌");

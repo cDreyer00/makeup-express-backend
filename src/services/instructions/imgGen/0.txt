@@ -1,5 +1,4 @@
 [request]
-img: "https://img.com"
 create a prompt to generate a person with these aditional details:
 For a rock party, you can go for a look that's edgy and bold to match the high-energy vibe of the event. Based on the photo you've provided, here are some personalized makeup and fashion suggestions:
 
@@ -18,4 +17,4 @@ Fashion:
 Remember, the key is to balance comfort with style so you can enjoy the party while feeling confident in your outfit and makeup. Enjoy your rock party!
 
 [response]
-Create an image of a confident woman with cascading waves in her hair, deep red, bold eye makeup, smoky eyes with winged eyeliner, BOLD RED lipstick. A leather jacket with a band t-shirt, accessorize her with studded bracelets, a bold choker.
+Confident woman with cascading waves in her deep red hair, bold eye makeup, smoky eyes with winged eyeliner, BOLD RED lipstick. A leather jacket with a band t-shirt, accessorize her with studded bracelets, a bold choker.

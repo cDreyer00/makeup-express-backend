@@ -3,15 +3,15 @@ const imgGenerator = require('./AIImgGen');
 
 class Assistant {
     constructor(apiKey, configs = undefined) {
-        let {instruction, messages, model, max_tokens, response_format} = configs;
+        let { instruction, messages, model, max_tokens, response_format } = configs;
 
         this.openai = new OpenAI({ apiKey: apiKey });
 
         this.response_format = response_format;
-        this.instruction     = instruction;
-        this.messages        = messages      || [];    
-        this.model           = model         || models.gpt4Vision;
-        this.max_tokens      = max_tokens    || 400;
+        this.instruction = instruction;
+        this.messages = messages || [];
+        this.model = model || models.gpt4Vision;
+        this.max_tokens = max_tokens || 400;
     }
 
     set instructionPrompt(instruction) {
@@ -42,7 +42,6 @@ class Assistant {
             }
 
             this.messages.push(msg);
-
             let msgs = this.messages.slice();
 
             if (this.instruction)
