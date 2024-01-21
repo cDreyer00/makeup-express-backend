@@ -24,7 +24,6 @@ async function generate({ prompt, imgUrl }) {
             data
         })
         
-        console.log(res.data);
         return res.data;
     }
     catch (err) {

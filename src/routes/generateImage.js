@@ -17,16 +17,18 @@ async function generateImage(req, res) {
         let prompt = req.body.prompt;
         if (!prompt) throw new Error("No prompt provided");
 
-        prompt = "create a prompt to generate a person with these aditional details:\n" + prompt;
+        // prompt = "create a prompt to generate a person with these aditional details:\n" + prompt;
 
         const imgPrompterAssistant = await assistants.createImgGenPrompter(apiKey);
         let imgPromptRes = await imgPrompterAssistant.chat({
             message: prompt,
-            img: imgUrl
+            // img: imgUrl
         });
 
-        if(imgPromptRes.includes("sorry" || "Sorry"))
+        if(imgPromptRes.includes("sorry" || "Sorry")){
+            console.log(imgPromptRes)
             throw new Error("Prompt not accepted by AI");
+        }
 
         let generatedImg = await imgPrompterAssistant.generateImage({ prompt: imgPromptRes, imgUrl });
 

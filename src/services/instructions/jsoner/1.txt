@@ -1,0 +1,25 @@
+[request]
+Without a specific preference mentioned, I'll provide a balanced makeup and fashion suggestion that enhances your features and complements your natural style, based on the image you've shared.
+
+Makeup:
+Your makeup appears to be quite polished with a neat winged eyeliner which really flatters the eye shape. Here are some additional touches you might consider:
+- Complexion: Maintain a natural, fresh skin look with a light to medium coverage foundation or a tinted moisturizer to even out the skin tone while letting your natural beauty shine through.
+- Cheeks: A hint of blush on the apples of your cheeks will add a healthy warmth to your complexion. A peach or soft pink shade could complement your skin tone beautifully.
+- Eyes: Your eyeliner is on point. For a soft enhancement, consider adding a neutral eyeshadow to the lids to give depth, and perhaps a bit of mascara to enhance your lashes.
+- Lips: A tinted lip balm or a neutral lip color can keep your lips looking moisturized and give them a subtle splash of color that isn't overwhelming.
+
+Fashion:
+With your current outfit and visible style—featuring a black top which suggests a liking for classic and versatile pieces—I'm inclined to suggest:
+- Tops: Consider a blouse with delicate fabric like chiffon or silk in lighter hues like beige, soft pastels, or white to provide a contrast to your dark top, maintaining balance in your look.
+- Bottoms: A pair of high-waisted skinny jeans or trousers. This will provide a sleek silhouette and can pair well with both casual and more dressed-up tops.
+- Layering: A denim jacket or cardigan can be a comfortable addition, offering a practical yet stylish layer that's easy to combine.
+- Accessories: Subtle jewelry like a delicate necklace or a stack of thin bangles would complement the simplicity of the outfit. Your current necklace and piercings already add a personalized touch.
+
+Remember, the goal is to make you feel confident and comfortable. So, these are just guidelines, and it's important that your personal style and preference always take precedence.
+
+[response]
+makeups:[
+   "tinted moisturizer",
+   "soft pink blush",         
+   "tinted lip balm"
+]
