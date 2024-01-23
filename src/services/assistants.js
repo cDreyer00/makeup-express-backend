@@ -31,7 +31,7 @@ async function createImgGenPrompter(apiKey) {
         messages,
         max_tokens: 400,
     }
-    console.log("instruction:", instruction);
+
     let assistant = new Assistant(apiKey, configs);
     return assistant;
 }
