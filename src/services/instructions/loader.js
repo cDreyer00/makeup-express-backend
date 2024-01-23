@@ -70,11 +70,11 @@ async function getMessages(instruction) {
 }
 
 function splitMessage(message) {
-   let request = message.split('[request]\r\n');
+   let request = message.split('[request]\n');
    if (!request || request.length < 2) return false;
    request = request[1].split('\r\n[response]')[0];
 
-   let response = message.split('[response]\r\n');
+   let response = message.split('[response]\n');
    if (!response || response.length < 2) return false;
    response = response[1];
 
