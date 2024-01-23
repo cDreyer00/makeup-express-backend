@@ -51,11 +51,14 @@ async function getMessages(instruction) {
    let messages = []
    for (let file of messagesFiles) {
       let message = await fs.promises.readFile(path.join(__dirname, instruction, file));
-      message = message.toString();
+      message = message.toString('utf-8');
       
       console.log(message);
-
+      
       message = splitMessage(message);
+      
+      console.log(message);
+      
       if (!message) {
          throw new Error(`Instruction message from ${instruction}/${file} is not valid`);
       }
