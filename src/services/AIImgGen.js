@@ -11,7 +11,7 @@ async function generate({ prompt, imgUrl }) {
             face_image_url: imgUrl,
             seed: 1,
             num_inference_steps: 50,
-            negative_prompt: "blurry, low resolution, bad, ugly, low quality, pixelated, interpolated, compression artifacts, noisey, grainy, multiple people, multiple faces, hidden eyes"
+            negative_prompt: "blurry, low resolution, bad, ugly, low quality, pixelated, interpolated, compression artifacts, noisey, grainy, multiple people, multiple faces, hidden eyes, nude, erotic, naked"
         }
 
         const res = await axios({
