@@ -65,7 +65,11 @@ async function getMessages(instruction) {
 }
 
 function splitMessage(message) {
+   // remove every '\r' from the message
+   message = message.replace(/\r/g, '');
+
    let request = message.split('[request]\n');
+
    if (!request || request.length < 2) return false;
    request = request[1].split('\n[response]')[0];
 

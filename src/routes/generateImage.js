@@ -1,6 +1,7 @@
 const { json } = require('express');
 const assistants = require('../services/assistants');
 const imgUploader = require('../services/imageUploader');
+const imgClassificator = require('../services/ImgClassificator');
 const apiKey = process.env.OPENAI_KEY;
 
 async function generateImage(req, res) {
@@ -8,6 +9,7 @@ async function generateImage(req, res) {
     console.log("Generating image...");
     console.log(req.body);
     try {
+        // get requests data
         let img = req.file;
         if (!img) throw new Error("No image provided");
 
@@ -16,22 +18,23 @@ async function generateImage(req, res) {
 
         let prompt = req.body.prompt;
         if (!prompt) throw new Error("No prompt provided");
-
-        // prompt = "create a prompt to generate a person with these aditional details:\n" + prompt;
-
+        
+        // extract information about skin color
+        const extractInfos = await imgClassificator(imgUrl);
+        
+        // generate prompt
         const imgPrompterAssistant = await assistants.createImgGenPrompter(apiKey);
         let imgPromptRes = await imgPrompterAssistant.chat({
             message: prompt,
-            // img: imgUrl
         });
-
+        
+        // check if response is the expected
         if(imgPromptRes.includes("sorry" || "Sorry")){
             console.log(imgPromptRes)
             throw new Error("Prompt not accepted by AI");
         }
-
+        
         let generatedImg = await imgPrompterAssistant.generateImage({ prompt: imgPromptRes, imgUrl });
-
         let result = {
             prompt: imgPromptRes,
             referenceImgUrl: imgUrl,
