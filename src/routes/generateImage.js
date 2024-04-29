@@ -20,12 +20,18 @@ async function generateImage(req, res) {
         if (!prompt) throw new Error("No prompt provided");
         
         // extract information about skin color
-        const extractInfos = await imgClassificator(imgUrl);
-        
+        let extractInfos = await imgClassificator(imgUrl);
+        if(!extractInfos)
+            extractInfos = "not especified"
+        else
+            extractInfos = `${extractInfos[0]}, ${extractInfos[1]} skin`
+
+        console.log("Extracted infos: ", extractInfos);
+
         // generate prompt
         const imgPrompterAssistant = await assistants.createImgGenPrompter(apiKey);
         let imgPromptRes = await imgPrompterAssistant.chat({
-            message: prompt,
+            message: `${prompt}\nPerson information: ${extractInfos}`
         });
         
         // check if response is the expected
