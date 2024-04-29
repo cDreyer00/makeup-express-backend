@@ -11,18 +11,17 @@ async function advices(req, res) {
     console.log("Getting advices...");
 
     try {
-        let { preference, language } = req.body;
-        let img = req.file;
+        let { preference, language, imgUrl } = req.body;
 
-        if (!img) return res.status(400).json({ error: "No image provided" });
+        if (!imgUrl) {
+            let img = req.file;
+            if (!img) return res.status(400).json({ error: "No image provided" });
 
-        img = img.buffer.toString('base64');
-
-        var imgUrl = await imgUploader.submit({ img, expiration: 999999 });
+            imgUrl = await uploadImageFile({ img });
+        }
 
         if (preference == "") preference = undefined;
         preference = preference ? preference : "none";
-
 
         if (!language || language == "")
             language = "en";
@@ -61,9 +60,15 @@ async function advices(req, res) {
     }
 }
 
+async function uploadImageFile({ img }) {
+    img = img.buffer.toString('base64');
+    var imgUrl = await imgUploader.submit({ img, expiration: 999999 });
+    return imgUrl;
+}
+
 async function getAssistantRes({ message, img }) {
     var chatAssistant = await assistants.createMakeupExpressAssistant(apiKey);
-    let makeupRes = await chatAssistant.chat({message, img});
+    let makeupRes = await chatAssistant.chat({ message, img });
 
     return makeupRes;
 }
