@@ -2,6 +2,7 @@ require('dotenv').config();
 
 const assistants = require('../services/assistants');
 const imgUploader = require('../services/imageUploader');
+const translatorAi = require('../services/translator');
 const apiKey = process.env.OPENAI_KEY;
 
 const MIN_PROMPT_LENGTH = 500;
@@ -26,6 +27,8 @@ async function advices(req, res) {
         if (!language || language == "")
             language = "en";
 
+        preference = await translate(request.message);
+
         let request = {
             img: imgUrl,
             message: JSON.stringify({
@@ -35,7 +38,7 @@ async function advices(req, res) {
         };
 
         console.log("request:", request)
-
+        
         let makeupRes = await getAssistantRes(request);
         let resLength = makeupRes.length;
         while (resLength < MIN_PROMPT_LENGTH) {
@@ -71,6 +74,11 @@ async function getAssistantRes({ message, img }) {
     let makeupRes = await chatAssistant.chat({ message, img });
 
     return makeupRes;
+}
+
+async function translate(message) {
+    var chatAssistant = await translatorAi(message);
+    return chatAssistant;
 }
 
 module.exports = advices;

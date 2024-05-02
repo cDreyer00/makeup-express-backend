@@ -24,7 +24,6 @@ class Assistant {
     }
 
     async chat({ message = undefined, img = undefined }) {
-
         if (this.makingRequest) return false;
         this.makingRequest = true;
 
