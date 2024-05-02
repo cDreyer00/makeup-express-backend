@@ -27,7 +27,7 @@ async function advices(req, res) {
         if (!language || language == "")
             language = "en";
 
-        preference = await translate(request.message);
+        preference = await translate(preference);
 
         let request = {
             img: imgUrl,
@@ -38,7 +38,7 @@ async function advices(req, res) {
         };
 
         console.log("request:", request)
-        
+
         let makeupRes = await getAssistantRes(request);
         let resLength = makeupRes.length;
         while (resLength < MIN_PROMPT_LENGTH) {
