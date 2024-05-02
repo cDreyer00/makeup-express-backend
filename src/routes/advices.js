@@ -13,6 +13,7 @@ async function advices(req, res) {
 
     try {
         let { preference, language, imgUrl } = req.body;
+        language = "english"
 
         if (!imgUrl) {
             let img = req.file;
