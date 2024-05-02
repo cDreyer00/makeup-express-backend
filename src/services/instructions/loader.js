@@ -5,6 +5,7 @@ async function loadInstructions(title = undefined) {
    const files = await fs.promises.readdir(__dirname, { withFileTypes: true });
    const instructionsTitle = files.filter(file => file.isDirectory()).map(file => file.name);
 
+   // If title is defined, return the instruction with the title
    if (title) {
       if (!instructionsTitle.includes(title)) {
          throw new Error(`Instruction ${title} not found`);
@@ -19,6 +20,7 @@ async function loadInstructions(title = undefined) {
       };
    }
 
+   // If title is not defined, return all instructions
    let instructions = []
    for (let title of instructionsTitle) {
       let system = await getSystem(title);

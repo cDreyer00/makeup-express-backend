@@ -3,7 +3,7 @@ const loadInstructions = require("./instructions/loader")
 
 function createBaseAssistant(apiKey) { return new Assistant(apiKey) }
 
-function converMessages(messages) {
+function convertMessages(messages) {
     let newMessages = [];
     for (let message of messages) {
         newMessages.push({
@@ -24,7 +24,7 @@ async function createImgGenPrompter(apiKey) {
     let imgGenInstructions = await loadInstructions("imgGen");
     
     let instruction = imgGenInstructions.system;
-    let messages = converMessages(imgGenInstructions.messages);    
+    let messages = convertMessages(imgGenInstructions.messages);    
 
     let configs = {
         instruction,
@@ -40,7 +40,7 @@ async function createMakeupExpressAssistant(apiKey) {
     let makeupInstructions = await loadInstructions("advices");
 
     let instruction = makeupInstructions.system;
-    let messages = converMessages(makeupInstructions.messages);
+    let messages = convertMessages(makeupInstructions.messages);
     
     let configs = {
         instruction,
@@ -56,7 +56,7 @@ async function createJSONAssistant(apiKey) {
     let jsonerInstructions = await loadInstructions("jsoner");
     
     let instruction = jsonerInstructions.system;
-    let messages = converMessages(jsonerInstructions.messages);
+    let messages = convertMessages(jsonerInstructions.messages);
 
     let configs = {
         instruction,
